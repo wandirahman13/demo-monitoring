@@ -2,38 +2,26 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   namespace: monitoring
-  annotations:
-  creationTimestamp: null
-  generation: 1
   labels:
     app: grafana
   name: grafana
 spec:
-  progressDeadlineSeconds: 600
-  replicas: 1
-  revisionHistoryLimit: 10
+  replicas: 2
   selector:
     matchLabels:
       app: grafana
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     metadata:
-      creationTimestamp: null
+      name: grafana
+      labels:
+        app: grafana
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9100"
-      labels:
-        app: grafana
     spec:
       containers:
       - envFrom:
-        - secretRef:
-            name: grafana-creds
-        image: docker.io/grafana/grafana:5.3.2
+        image: grafana/grafana:7.5.2
         imagePullPolicy: IfNotPresent
         name: grafana
         resources: {}
